@@ -1,13 +1,17 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const authRoute = require("./routes/auth");
-const verifyToken = require("./middleware/verifyToken");
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+
+import connectDB from "./config/db.js";
+import authRoute from "./routes/auth.js";
+import verifyToken from "./middleware/verifyToken.js";
 
 dotenv.config();
+
 const app = express();
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 
 // Connect Database
