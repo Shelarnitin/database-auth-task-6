@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-function verifyToken(req, res, next) {
+const verifyToken = (req, res, next) => {
   const authHeader = req.headers.token;
 
   if (authHeader) {
@@ -13,6 +13,6 @@ function verifyToken(req, res, next) {
   } else {
     return res.status(401).json("⚠️ You are not authenticated!");
   }
-}
+};
 
-module.exports = verifyToken;
+export default verifyToken;
