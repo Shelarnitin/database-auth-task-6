@@ -1,12 +1,15 @@
-const express = require("express");
+import express from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
 
 // 🧾 REGISTER USER
 router.post("/register", async (req, res) => {
   try {
+    console.log("📩 Registration request received:", req.body);
+
     const salt = await bcrypt.genSalt(10);
     const hashedPass = await bcrypt.hash(req.body.password, salt);
 
@@ -17,11 +20,21 @@ router.post("/register", async (req, res) => {
     });
 
     const savedUser = await newUser.save();
-    res.status(201).json({ message: "✅ User registered successfully", user: savedUser });
-  } catch (error) {
+    res.status(201).json({
+      message: "✅ User registered successfully",
+      user: savedUser,
+    });
+    } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: "⚠️ Username or Email already exists. Please try another.",
+      });
+    }
     res.status(500).json({ message: "Registration failed", error });
   }
+
 });
+
 
 // 🔑 LOGIN USER
 router.post("/login", async (req, res) => {
@@ -42,4 +55,4 @@ router.post("/login", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
